@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
+import os
+
+import numpy as np
+import progressbar
+import skimage.io as io
+import sklearn.model_selection as sk
+import torch
 import torch.nn as nn
+import torch.optim as optim
+
 import Attention_Unet_Pytorch.models.unet as unet
 import Attention_Unet_Pytorch.utils.data as data
 import Attention_Unet_Pytorch.utils.utils as utils
-import torch.optim as optim
-import sklearn.model_selection as sk
-import torch
-import progressbar
-import skimage.io as io
-import numpy as np
-import os
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
@@ -49,8 +51,10 @@ def train(path_imgs, path_labels, epochs=5):
     dataset_train, dataset_val = get_datasets(path_imgs, path_labels)
 
     for epoch in range(epochs):
-        utils.print_gre("Epoch {}/{}".format(epoch+1, epochs))
-        with progressbar.ProgressBar(max_value=len(dataset_train), widgets=widgets) as bar:
+        utils.print_gre("Epoch {}/{}".format(epoch + 1, epochs))
+        with progressbar.ProgressBar(
+            max_value=len(dataset_train), widgets=widgets
+        ) as bar:
             net.train()
             for i in range(len(dataset_train)):  # boucle inf si on ne fait pas comme ça
                 bar.update(i)
@@ -61,7 +65,9 @@ def train(path_imgs, path_labels, epochs=5):
                 loss_train.backward()
                 optimizer.step()
                 # print(loss_train.item())
-        with progressbar.ProgressBar(max_value=len(dataset_val), widgets=widgets) as bar2:
+        with progressbar.ProgressBar(
+            max_value=len(dataset_val), widgets=widgets
+        ) as bar2:
             net.eval()
             for j in range(len(dataset_val)):
                 bar2.update(j)
@@ -98,12 +104,12 @@ def pred(model):
         base_path + "Spheroid_D31000_02_w2soSPIM-405_135_6.png",
         base_path + "Spheroid_D31000_02_w2soSPIM-405_135_9.png",
         base_path + "Spheroid_D31000_02_w2soSPIM-405_136_5.png",
-        base_path + "Spheroid_D31000_02_w2soSPIM-405_136_9.png"
+        base_path + "Spheroid_D31000_02_w2soSPIM-405_136_9.png",
     ]
     imgs, preds, att_map = pred_(model, pathlist)
     utils.visualize(imgs, preds)
     utils.plot_att_map(imgs[-1], att_map.detach().cpu())
 
+
 if __name__ == "__main__":
     train(BASE_PATH + "imgs/", BASE_PATH + "labels/", epochs=10)
-

@@ -4,6 +4,7 @@
 import os
 import random
 import re
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -17,7 +18,9 @@ def list_files_path(path):
     :return: A list containing all files in the folder
     :rtype: List
     """
-    return sorted_alphanumeric([path + f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))])
+    return sorted_alphanumeric(
+        [path + f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    )
 
 
 def shuffle_lists(lista, listb, seed=42):

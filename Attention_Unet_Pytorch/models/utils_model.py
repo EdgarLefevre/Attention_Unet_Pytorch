@@ -13,7 +13,7 @@ class DoubleConv(nn.Module):
             nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
             nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
             nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True)
+            nn.ReLU(inplace=True),
         )
 
     def forward(self, x):
@@ -26,10 +26,7 @@ class Down_Block(nn.Module):
     def __init__(self, in_channels, out_channels, drop=0.5):
         super().__init__()
         self.conv = DoubleConv(in_channels, out_channels)
-        self.down = nn.Sequential(
-            nn.MaxPool2d(2),
-            nn.Dropout(drop)
-        )
+        self.down = nn.Sequential(nn.MaxPool2d(2), nn.Dropout(drop))
 
     def forward(self, x):
         c = self.conv(x)
@@ -40,8 +37,7 @@ class Bridge(nn.Module):
     def __init__(self, in_channels, out_channels, drop):
         super().__init__()
         self.conv = nn.Sequential(
-            DoubleConv(in_channels, out_channels),
-            nn.Dropout(drop)
+            DoubleConv(in_channels, out_channels), nn.Dropout(drop)
         )
 
     def forward(self, x):
@@ -53,10 +49,11 @@ class Up_Block(nn.Module):
 
     def __init__(self, in_channels, out_channels, drop=0.5, attention=False):
         super().__init__()
-        self.up = nn.ConvTranspose2d(in_channels, out_channels, kernel_size=(2, 2), stride=(2, 2))
+        self.up = nn.ConvTranspose2d(
+            in_channels, out_channels, kernel_size=(2, 2), stride=(2, 2)
+        )
         self.conv = nn.Sequential(
-            DoubleConv(in_channels, out_channels),
-            nn.Dropout(p=drop)
+            DoubleConv(in_channels, out_channels), nn.Dropout(p=drop)
         )
         self.attention = attention
         if attention:
@@ -79,8 +76,7 @@ class OutConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(OutConv, self).__init__()
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, kernel_size=1),
-            nn.Sigmoid()
+            nn.Conv2d(in_channels, out_channels, kernel_size=1), nn.Sigmoid()
         )
 
     def forward(self, x):
@@ -105,7 +101,9 @@ class GatingSignal(nn.Module):
 class Attention_Gate(nn.Module):
     def __init__(self, in_channels):
         super(Attention_Gate, self).__init__()
-        self.conv_theta_x = nn.Conv2d(in_channels, in_channels, kernel_size=(1, 1), stride=(2, 2))
+        self.conv_theta_x = nn.Conv2d(
+            in_channels, in_channels, kernel_size=(1, 1), stride=(2, 2)
+        )
         self.conv_phi_g = nn.Conv2d(in_channels, in_channels, kernel_size=(1, 1))
         self.att = nn.Sequential(
             nn.ReLU(),
