@@ -1,6 +1,7 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 
+import argparse
 import os
 import random
 import re
@@ -114,3 +115,50 @@ def plot_att_map(img, map):
     # plt.show()
     fig.savefig("plots/att_map.png")
     plt.close(fig)
+
+
+def learning_curves(train, val):
+    fig, ax = plt.subplots(1, figsize=(12, 8))
+    fig.suptitle("Training Curves")
+    ax.plot(train, label="Entraînement")
+    ax.plot(val, label="Validation")
+    ax.set_ylabel("Loss", fontsize=14)
+    ax.set_xlabel("Epoch", fontsize=14)
+    fig.savefig("plots/plot.png")
+    plt.close(fig)
+
+
+def get_args():
+    """
+    Argument parser.
+
+    :return: Object containing all the parameters needed to train a model
+    :rtype: Dict
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--epochs, -e", type=int, default=200, help="number of epochs of training"
+    )
+    parser.add_argument(
+        "--batch_size, -bs", type=int, default=300, help="size of the batches"
+    )
+    parser.add_argument("--lr", type=float, default=0.001, help="adam: learning rate")
+    parser.add_argument(
+        "--attention, -a",
+        dest="att",
+        action="store_true",
+        help="If flag, use attention block",
+    )
+    parser.add_argument(
+        "--size", type=int, default=128, help="Size of the image, one number"
+    )
+    parser.add_argument("--drop_r, -d", type=float, default=0.2, help="Dropout rate")
+    parser.add_argument(
+        "--filters, -f",
+        type=int,
+        default=16,
+        help="Number of filters in first conv block",
+    )
+    args = parser.parse_args()
+    print_red(args)
+    return args

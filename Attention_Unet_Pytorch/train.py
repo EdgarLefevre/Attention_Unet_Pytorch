@@ -29,7 +29,7 @@ widgets = [
 BASE_PATH = "/home/edgar/Documents/Datasets/JB/supervised/"
 
 
-def get_datasets(path_img, path_label):
+def get_datasets(path_img, path_label, config):
     img_path_list = utils.list_files_path(path_img)
     label_path_list = utils.list_files_path(path_label)
     img_path_list, label_path_list = utils.shuffle_lists(img_path_list, label_path_list)
@@ -38,19 +38,24 @@ def get_datasets(path_img, path_label):
     img_train, img_val, label_train, label_val = sk.train_test_split(
         img_path_list, label_path_list, test_size=0.2, random_state=42
     )
-    dataset_train = data.JB_Dataset(16, 512, img_train, label_train)
-    dataset_val = data.JB_Dataset(16, 512, img_val, label_val)
+    dataset_train = data.JB_Dataset(
+        config.batch_size, config.size, img_train, label_train
+    )
+    dataset_val = data.JB_Dataset(config.batch_size, config.size, img_val, label_val)
     return dataset_train, dataset_val
 
 
-def train(path_imgs, path_labels, epochs=5):
-    net = unet.Unet(8, attention=True).cuda()
-    optimizer = optim.Adam(net.parameters(), lr=0.01)
-    criterion = nn.MSELoss()
+def train(path_imgs, path_labels, config, epochs=5):
+    net = unet.Unet(config.filters, attention=config.att).cuda()
+    optimizer = optim.Adam(net.parameters(), lr=config.lr)
+    criterion = nn.BCELoss()
     #  get dataset
     dataset_train, dataset_val = get_datasets(path_imgs, path_labels)
-
+    train_loss = []
+    val_loss = []
     for epoch in range(epochs):
+        epoch_train_loss = 0
+        epoch_val_loss = 0
         utils.print_gre("Epoch {}/{}".format(epoch + 1, epochs))
         with progressbar.ProgressBar(
             max_value=len(dataset_train), widgets=widgets
@@ -64,7 +69,8 @@ def train(path_imgs, path_labels, epochs=5):
                 loss_train = criterion(output, labels.cuda())
                 loss_train.backward()
                 optimizer.step()
-                # print(loss_train.item())
+                epoch_train_loss += loss_train.item()
+        train_loss.append(epoch_train_loss)
         with progressbar.ProgressBar(
             max_value=len(dataset_val), widgets=widgets
         ) as bar2:
@@ -73,8 +79,15 @@ def train(path_imgs, path_labels, epochs=5):
                 bar2.update(j)
                 output, _ = net(imgs.cuda())
                 loss_val = criterion(output, labels.cuda())
-        utils.print_gre("Loss train {}\nLoss val {}".format(loss_train, loss_val))
+                epoch_val_loss += loss_val.item()
+        val_loss.append(epoch_val_loss)
+        utils.print_gre(
+            "Loss train {}\nLoss val {}".format(
+                np.array(train_loss).mean(), np.array(val_loss).mean()
+            )
+        )
     pred(net)
+    utils.learning_curves(train_loss, val_loss)
 
 
 def create_pred_dataset(path_img):
@@ -112,4 +125,5 @@ def pred(model):
 
 
 if __name__ == "__main__":
-    train(BASE_PATH + "imgs/", BASE_PATH + "labels/", epochs=10)
+    args = utils.get_args()
+    train(BASE_PATH + "imgs/", BASE_PATH + "labels/", config=args, epochs=args.epoch)

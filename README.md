@@ -16,3 +16,11 @@ Implementation of attention unet in pytorch.
 ```bash
 python -m Attention_Unet_Pytorch.train
 ```
+
+# Results
+
+Attention map :
+![attention map](imgs/att_map.png)
+
+Segmentation :
+![Segmentation](imgs/prediction.png)
