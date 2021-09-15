@@ -27,6 +27,7 @@ widgets = [
 ]
 
 BASE_PATH = "/home/edgar/Documents/Datasets/JB/supervised/"
+SAVE_PATH = "saved_models/net.pth"
 
 
 def get_datasets(path_img, path_label, config):
@@ -50,7 +51,7 @@ def train(path_imgs, path_labels, config, epochs=5):
     optimizer = optim.Adam(net.parameters(), lr=config.lr)
     criterion = nn.BCELoss()
     #  get dataset
-    dataset_train, dataset_val = get_datasets(path_imgs, path_labels)
+    dataset_train, dataset_val = get_datasets(path_imgs, path_labels, config)
     train_loss = []
     val_loss = []
     for epoch in range(epochs):
@@ -86,6 +87,7 @@ def train(path_imgs, path_labels, config, epochs=5):
                 np.array(train_loss).mean(), np.array(val_loss).mean()
             )
         )
+    torch.save(net.state_dict(), SAVE_PATH)
     pred(net)
     utils.learning_curves(train_loss, val_loss)
 
@@ -126,4 +128,4 @@ def pred(model):
 
 if __name__ == "__main__":
     args = utils.get_args()
-    train(BASE_PATH + "imgs/", BASE_PATH + "labels/", config=args, epochs=args.epoch)
+    train(BASE_PATH + "imgs/", BASE_PATH + "labels/", config=args, epochs=args.epochs)

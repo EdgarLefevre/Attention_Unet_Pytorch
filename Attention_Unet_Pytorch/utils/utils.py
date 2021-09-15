@@ -137,26 +137,26 @@ def get_args():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--epochs, -e", type=int, default=200, help="number of epochs of training"
+        "--epochs", "-e", type=int, default=100, help="number of epochs of training"
     )
     parser.add_argument(
-        "--batch_size, -bs", type=int, default=300, help="size of the batches"
+        "--batch_size", "-bs", type=int, default=16, help="size of the batches"
     )
     parser.add_argument("--lr", type=float, default=0.001, help="adam: learning rate")
     parser.add_argument(
-        "--attention, -a",
+        "--att", "-a",
         dest="att",
         action="store_true",
         help="If flag, use attention block",
     )
     parser.add_argument(
-        "--size", type=int, default=128, help="Size of the image, one number"
+        "--size", type=int, default=512, help="Size of the image, one number"
     )
-    parser.add_argument("--drop_r, -d", type=float, default=0.2, help="Dropout rate")
+    parser.add_argument("--drop_r", "-d", type=float, default=0.2, help="Dropout rate")
     parser.add_argument(
-        "--filters, -f",
+        "--filters", "-f",
         type=int,
-        default=16,
+        default=8,
         help="Number of filters in first conv block",
     )
     args = parser.parse_args()
