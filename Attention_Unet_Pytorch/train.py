@@ -54,6 +54,7 @@ def train(path_imgs, path_labels, config, epochs=5):
     dataset_train, dataset_val = get_datasets(path_imgs, path_labels, config)
     train_loss = []
     val_loss = []
+    scheduler = torch.optim.StepLR(optimizer, step_size=20, gamma=0.1)
     for epoch in range(epochs):
         epoch_train_loss = 0
         epoch_val_loss = 0
@@ -87,6 +88,7 @@ def train(path_imgs, path_labels, config, epochs=5):
                 np.array(train_loss).mean(), np.array(val_loss).mean()
             )
         )
+        scheduler.step()
     torch.save(net.state_dict(), SAVE_PATH)
     pred(net)
     utils.learning_curves(train_loss, val_loss)
