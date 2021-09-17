@@ -6,6 +6,7 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=4.5=1_gnu
+  - alsa-lib=1.2.3=h516909a_0
   - appdirs=1.4.4=py_0
   - blas=1.0=mkl
   - blosc=1.21.0=h9c3ff4c_0
@@ -15,6 +16,7 @@ dependencies:
   - bzip2=1.0.8=h7f98852_4
   - c-ares=1.17.1=h27cfd23_0
   - ca-certificates=2021.5.30=ha878542_0
+  - cairo=1.16.0=h6cf1ce9_1008
   - certifi=2021.5.30=py38h578d9bd_0
   - cffi=1.14.6=py38h400218f_0
   - cfgv=3.3.1=pyhd8ed1ab_0
@@ -27,43 +29,78 @@ dependencies:
   - cycler=0.10.0=py38_0
   - cytoolz=0.11.0=py38h7b6447c_0
   - dask-core=2021.8.1=pyhd3eb1b0_0
+  - dbus=1.13.6=h48d8840_2
   - distlib=0.3.2=pyhd8ed1ab_0
   - editdistance-s=1.0.0=py38h1fd1430_1
+  - expat=2.4.1=h9c3ff4c_0
+  - ffmpeg=4.2.3=h167e202_0
   - filelock=3.0.12=pyh9f0ad1d_0
+  - fontconfig=2.13.1=hba837de_1005
   - fonttools=4.25.0=pyhd3eb1b0_0
   - freetype=2.10.4=h5ab3b9f_0
   - fsspec=2021.7.0=pyhd3eb1b0_0
+  - gettext=0.19.8.1=h0b5b191_1005
   - giflib=5.1.7=h516909a_1
+  - glib=2.68.3=h9c3ff4c_0
+  - glib-tools=2.68.3=h9c3ff4c_0
+  - gmp=6.2.1=h58526e2_0
+  - gnutls=3.6.13=h85f3911_1
+  - graphite2=1.3.13=h58526e2_1001
+  - gst-plugins-base=1.18.4=hf529b03_2
+  - gstreamer=1.18.4=h76c114f_2
+  - harfbuzz=2.8.2=h83ec7ef_0
+  - hdf5=1.10.6=nompi_h7c3c948_1111
+  - icu=68.1=h58526e2_0
   - identify=2.2.13=pyhd8ed1ab_0
   - idna=3.2=pyhd3eb1b0_0
   - imagecodecs=2021.6.8=py38h581e88b_0
   - imageio=2.9.0=pyhd3eb1b0_0
   - intel-openmp=2021.3.0=h06a4308_3350
+  - jasper=1.900.1=h07fcdf6_1006
   - joblib=1.0.1=pyhd3eb1b0_0
-  - jpeg=9b=h024ee3a_2
+  - jpeg=9d=h36c2ea0_0
   - jxrlib=1.1=h7f98852_2
   - kiwisolver=1.3.1=py38h2531618_0
   - krb5=1.19.2=hcc1bbae_0
+  - lame=3.100=h7f98852_1001
   - lcms2=2.12=h3be6417_0
   - ld_impl_linux-64=2.35.1=h7274673_9
   - lerc=2.2.1=h9c3ff4c_0
   - libaec=1.0.5=h9c3ff4c_0
+  - libblas=3.9.0=11_linux64_mkl
+  - libcblas=3.9.0=11_linux64_mkl
+  - libclang=11.1.0=default_ha53f305_1
   - libcurl=7.78.0=h2574ce0_0
   - libdeflate=1.7=h7f98852_5
   - libedit=3.1.20191231=he28a2e2_2
   - libev=4.33=h516909a_1
+  - libevent=2.1.10=hcdb4288_3
   - libffi=3.3=he6710b0_2
   - libgcc-ng=9.3.0=h5101ec6_17
   - libgfortran-ng=7.5.0=ha8ba4b0_17
   - libgfortran4=7.5.0=ha8ba4b0_17
+  - libglib=2.68.3=h3e27bee_0
   - libgomp=9.3.0=h5101ec6_17
+  - libiconv=1.16=h516909a_0
+  - liblapack=3.9.0=11_linux64_mkl
+  - liblapacke=3.9.0=11_linux64_mkl
+  - libllvm11=11.1.0=hf817b99_2
   - libnghttp2=1.43.0=h812cca2_0
+  - libogg=1.3.4=h7f98852_1
+  - libopencv=4.2.0=py38_6
+  - libopus=1.3.1=h7f98852_1
   - libpng=1.6.37=hbc83047_0
+  - libpq=13.3=hd57d9b9_0
   - libssh2=1.9.0=h1ba5d50_1
   - libstdcxx-ng=9.3.0=hd4cf53a_17
   - libtiff=4.1.0=h2733197_1
+  - libuuid=2.32.1=h7f98852_1000
   - libuv=1.40.0=h7b6447c_0
-  - libwebp=1.0.1=h8e7db2f_0
+  - libvorbis=1.3.7=h9c3ff4c_0
+  - libwebp=1.0.2=hf4e8a37_4
+  - libxcb=1.13=h7f98852_1003
+  - libxkbcommon=1.0.3=he3ba5ed_0
+  - libxml2=2.9.12=h72842e0_0
   - libzopfli=1.0.3=h9c3ff4c_0
   - locket=0.2.1=py38h06a4308_1
   - lz4-c=1.9.3=h295c915_1
@@ -73,22 +110,33 @@ dependencies:
   - mkl_fft=1.3.0=py38h42c9631_2
   - mkl_random=1.2.2=py38h51133e4_0
   - munkres=1.1.4=py_0
+  - mysql-common=8.0.25=ha770c72_0
+  - mysql-libs=8.0.25=h935591d_0
   - ncurses=6.2=he6710b0_1
+  - nettle=3.6=he412f7d_0
   - networkx=2.6.2=pyhd3eb1b0_0
   - ninja=1.10.2=hff7bd54_1
   - nodeenv=1.6.0=pyhd8ed1ab_0
+  - nspr=4.30=h9c3ff4c_0
+  - nss=3.67=hb5efdd6_0
   - numpy=1.20.3=py38hf144106_0
   - numpy-base=1.20.3=py38h74d4b33_0
   - olefile=0.46=py_0
+  - opencv=4.2.0=py38_6
+  - openh264=2.1.1=h780b84a_0
   - openjpeg=2.4.0=h3ad879b_0
-  - openssl=1.1.1l=h7f8727e_0
+  - openssl=1.1.1k=h7f98852_0
   - packaging=21.0=pyhd3eb1b0_0
   - partd=1.2.0=pyhd3eb1b0_0
+  - pcre=8.45=h9c3ff4c_0
   - pillow=8.3.1=py38h2c7a002_0
   - pip=21.0.1=py38h06a4308_0
+  - pixman=0.40.0=h36c2ea0_0
   - pooch=1.4.0=pyhd3eb1b0_0
   - pre-commit=2.15.0=py38h578d9bd_0
   - progressbar2=3.53.1=pyh9f0ad1d_0
+  - pthread-stubs=0.4=h36c2ea0_1001
+  - py-opencv=4.2.0=py38h23f93f0_6
   - pycparser=2.20=py_2
   - pyopenssl=20.0.1=pyhd3eb1b0_1
   - pyparsing=2.4.7=pyhd3eb1b0_0
@@ -100,6 +148,7 @@ dependencies:
   - pytorch=1.9.0=py3.8_cuda10.2_cudnn7.6.5_0
   - pywavelets=1.1.1=py38h7b6447c_2
   - pyyaml=5.4.1=py38h27cfd23_1
+  - qt=5.12.9=hda022c4_4
   - readline=8.1=h27cfd23_0
   - requests=2.26.0=pyhd3eb1b0_0
   - scikit-image=0.18.1=py38h51da96c_0
@@ -120,6 +169,18 @@ dependencies:
   - urllib3=1.26.6=pyhd3eb1b0_1
   - virtualenv=20.4.7=py38h578d9bd_0
   - wheel=0.37.0=pyhd3eb1b0_0
+  - x264=1!152.20180806=h14c3975_0
+  - xorg-kbproto=1.0.7=h7f98852_1002
+  - xorg-libice=1.0.10=h7f98852_0
+  - xorg-libsm=1.2.3=hd9c2040_1000
+  - xorg-libx11=1.7.2=h7f98852_0
+  - xorg-libxau=1.0.9=h7f98852_0
+  - xorg-libxdmcp=1.1.3=h7f98852_0
+  - xorg-libxext=1.3.4=h7f98852_1
+  - xorg-libxrender=0.9.10=h7f98852_1003
+  - xorg-renderproto=0.11.1=h7f98852_1002
+  - xorg-xextproto=7.3.0=h7f98852_1002
+  - xorg-xproto=7.0.31=h7f98852_1007
   - xz=5.2.5=h7b6447c_0
   - yaml=0.2.5=h7b6447c_0
   - zfp=0.5.5=h9c3ff4c_5

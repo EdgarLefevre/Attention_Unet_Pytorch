@@ -11,9 +11,10 @@ import torch.optim as optim
 
 import Attention_Unet_Pytorch.models.unet as unet
 import Attention_Unet_Pytorch.utils.data as data
+import Attention_Unet_Pytorch.utils.postprocessing as pp
 import Attention_Unet_Pytorch.utils.utils as utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # widget list for the progress bar
 widgets = [
@@ -54,10 +55,13 @@ def train(path_imgs, path_labels, config, epochs=5):
     dataset_train, dataset_val = get_datasets(path_imgs, path_labels, config)
     train_loss = []
     val_loss = []
-    scheduler = torch.optim.StepLR(optimizer, step_size=20, gamma=0.1)
+    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, epochs, verbose=True
+    )
     for epoch in range(epochs):
-        epoch_train_loss = 0
-        epoch_val_loss = 0
+        epoch_train_loss = []
+        epoch_val_loss = []
         utils.print_gre("Epoch {}/{}".format(epoch + 1, epochs))
         with progressbar.ProgressBar(
             max_value=len(dataset_train), widgets=widgets
@@ -71,8 +75,8 @@ def train(path_imgs, path_labels, config, epochs=5):
                 loss_train = criterion(output, labels.cuda())
                 loss_train.backward()
                 optimizer.step()
-                epoch_train_loss += loss_train.item()
-        train_loss.append(epoch_train_loss)
+                epoch_train_loss.append(loss_train.item())
+        train_loss.append(np.array(epoch_train_loss).mean())
         with progressbar.ProgressBar(
             max_value=len(dataset_val), widgets=widgets
         ) as bar2:
@@ -81,11 +85,11 @@ def train(path_imgs, path_labels, config, epochs=5):
                 bar2.update(j)
                 output, _ = net(imgs.cuda())
                 loss_val = criterion(output, labels.cuda())
-                epoch_val_loss += loss_val.item()
-        val_loss.append(epoch_val_loss)
+                epoch_val_loss.append(loss_val.item())
+        val_loss.append(np.array(epoch_val_loss).mean())
         utils.print_gre(
             "Loss train {}\nLoss val {}".format(
-                np.array(train_loss).mean(), np.array(val_loss).mean()
+                np.array(epoch_train_loss).mean(), np.array(epoch_val_loss).mean()
             )
         )
         scheduler.step()
@@ -124,6 +128,7 @@ def pred(model):
         base_path + "Spheroid_D31000_02_w2soSPIM-405_136_9.png",
     ]
     imgs, preds, att_map = pred_(model, pathlist)
+    preds = pp.remove_blobs_list(preds)
     utils.visualize(imgs, preds)
     utils.plot_att_map(imgs[-1], att_map.detach().cpu())
 
