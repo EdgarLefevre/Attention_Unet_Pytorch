@@ -27,7 +27,7 @@ widgets = [
     ") ",
 ]
 
-BASE_PATH = "/home/edgar/Documents/Datasets/JB/supervised/"
+BASE_PATH = "/home/edgar/Documents/Datasets/JB/new_images/"
 SAVE_PATH = "saved_models/net.pth"
 
 
@@ -35,7 +35,6 @@ def get_datasets(path_img, path_label, config):
     img_path_list = utils.list_files_path(path_img)
     label_path_list = utils.list_files_path(path_label)
     img_path_list, label_path_list = utils.shuffle_lists(img_path_list, label_path_list)
-
     # not good if we need to do metrics
     img_train, img_val, label_train, label_val = sk.train_test_split(
         img_path_list, label_path_list, test_size=0.2, random_state=42
@@ -119,6 +118,7 @@ def pred_(model, path_list):
 
 
 def pred(model):
+    model.eval()
     base_path = BASE_PATH + "test/"
     pathlist = [
         base_path + "Spheroid_D31000_02_w2soSPIM-405_135_5.png",
@@ -128,11 +128,16 @@ def pred(model):
         base_path + "Spheroid_D31000_02_w2soSPIM-405_136_9.png",
     ]
     imgs, preds, att_map = pred_(model, pathlist)
-    preds = pp.remove_blobs_list(preds)
+    # preds = pp.remove_blobs_list(preds)
     utils.visualize(imgs, preds)
     utils.plot_att_map(imgs[-1], att_map.detach().cpu())
 
 
 if __name__ == "__main__":
     args = utils.get_args()
-    train(BASE_PATH + "imgs/", BASE_PATH + "labels/", config=args, epochs=args.epochs)
+    train(
+        BASE_PATH + "patches/",
+        BASE_PATH + "patches_labels/",
+        config=args,
+        epochs=args.epochs,
+    )

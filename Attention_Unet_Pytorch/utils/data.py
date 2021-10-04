@@ -58,6 +58,6 @@ class JB_Dataset(Dataset):
             (self.batch_size, 1, self.img_size, self.img_size), dtype="float32"
         )
         for k, path_lab in enumerate(batch_label_img_paths):
-            img = np.array(io.imread(path_lab, plugin="tifffile")) / 255
+            img = np.array(io.imread(path_lab)) / 255
             y[k] = np.expand_dims(img, 0)
         return torch.Tensor(x), torch.Tensor(y)

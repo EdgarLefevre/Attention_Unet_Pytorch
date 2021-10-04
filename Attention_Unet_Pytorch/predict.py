@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import torch
-import skimage.io as io
 import numpy as np
+import skimage.io as io
+import torch
 
 import Attention_Unet_Pytorch.models.unet as unet
+import Attention_Unet_Pytorch.utils.postprocessing as pp
 import Attention_Unet_Pytorch.utils.utils as utils
 
 
@@ -35,11 +36,11 @@ def get_images(path_folder):
 if __name__ == "__main__":
     net = load_model("saved_models/net.pth")
     # print(net)
-    img_list, file_list = get_images("/home/edgar/Documents/Datasets/JB/good_try/")
+    img_list, file_list = get_images("/home/edgar/Documents/Datasets/JB/good/")
     for i, img in enumerate(img_list):
-        file_name = file_list[i].split('/')[-1]
+        file_name = file_list[i].split("/")[-1]
         print(file_name)
         mask = pred(net, img)
         mask = mask.cpu().detach().numpy()
-        mask = (mask > 0.5).astype(np.uint8).reshape(512, 512) * 255
+        mask = pp.remove_blobs((mask > 0.5).astype(np.uint8).reshape(512, 512) * 255)
         io.imsave("/home/edgar/Documents/Datasets/JB/good_labels/" + file_name, mask)

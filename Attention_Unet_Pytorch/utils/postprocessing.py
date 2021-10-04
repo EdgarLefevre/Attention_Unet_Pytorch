@@ -5,7 +5,8 @@ import cv2
 import numpy as np
 
 
-def remove_blobs(img, min_size=10):
+def remove_blobs(img, min_size=4):
+    img = 255 - img
     nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(
         img, connectivity=8
     )
@@ -16,7 +17,8 @@ def remove_blobs(img, min_size=10):
     for i in range(nb_components):
         if sizes[i] >= min_size:
             img2[output == i + 1] = 255
-    return img2
+    # img2 = cv2.bitwise_not(img2 / 255) * 255
+    return 255 - img2
 
 
 def remove_blobs_list(imgs):
