@@ -131,11 +131,11 @@ def pred(model):
     model.eval()
     base_path = BASE_PATH + "test/"
     pathlist = [
-        base_path + "Spheroid_D31000_02_w2soSPIM-405_135_5.png",
-        base_path + "Spheroid_D31000_02_w2soSPIM-405_135_6.png",
-        base_path + "Spheroid_D31000_02_w2soSPIM-405_135_9.png",
-        base_path + "Spheroid_D31000_02_w2soSPIM-405_136_5.png",
-        base_path + "Spheroid_D31000_02_w2soSPIM-405_136_9.png",
+        base_path + "90_s7_0_0.png",
+        base_path + "s7_27_0.png",
+        base_path + "s10_62_3.png",
+        base_path + "s19_49_2.png",
+        base_path + "s47_2_1.png",
     ]
     imgs, preds, att_map = pred_(model, pathlist)
     # preds = pp.remove_blobs_list(preds)
