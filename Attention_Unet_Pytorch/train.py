@@ -11,10 +11,11 @@ import torch.optim as optim
 
 import Attention_Unet_Pytorch.models.unet as unet
 import Attention_Unet_Pytorch.utils.data as data
-import Attention_Unet_Pytorch.utils.postprocessing as pp
 import Attention_Unet_Pytorch.utils.utils as utils
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# import Attention_Unet_Pytorch.utils.postprocessing as pp
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # widget list for the progress bar
 widgets = [
@@ -29,6 +30,14 @@ widgets = [
 
 BASE_PATH = "/home/edgar/Documents/Datasets/JB/new_images/"
 SAVE_PATH = "saved_models/net.pth"
+LOSS = np.inf
+
+
+def save_model(net, loss):
+    global LOSS
+    if loss < LOSS:
+        LOSS = loss
+        torch.save(net.state_dict(), SAVE_PATH)
 
 
 def get_datasets(path_img, path_label, config):
@@ -70,7 +79,7 @@ def train(path_imgs, path_labels, config, epochs=5):
                 bar.update(i)
                 imgs, labels = dataset_train[i]
                 optimizer.zero_grad()  # zero the gradient buffers
-                output, _ = net(imgs.cuda())  # return attention map
+                output, _ = net(imgs.cuda())  # return seg and attention map
                 loss_train = criterion(output, labels.cuda())
                 loss_train.backward()
                 optimizer.step()
@@ -85,14 +94,15 @@ def train(path_imgs, path_labels, config, epochs=5):
                 output, _ = net(imgs.cuda())
                 loss_val = criterion(output, labels.cuda())
                 epoch_val_loss.append(loss_val.item())
-        val_loss.append(np.array(epoch_val_loss).mean())
+        val_loss_epoch = np.array(epoch_val_loss).mean()
+        val_loss.append(val_loss_epoch)
         utils.print_gre(
             "Loss train {}\nLoss val {}".format(
-                np.array(epoch_train_loss).mean(), np.array(epoch_val_loss).mean()
+                np.array(epoch_train_loss).mean(), val_loss_epoch
             )
         )
         scheduler.step()
-    torch.save(net.state_dict(), SAVE_PATH)
+        save_model(net, val_loss_epoch)
     pred(net)
     utils.learning_curves(train_loss, val_loss)
 
